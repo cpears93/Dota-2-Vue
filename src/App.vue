@@ -3,66 +3,67 @@
     <dota2-header title="Dota2" />
     <dota2-header v-if="!heroes.length" title="LOADING..." />
     <div id="list-info" v-if="heroes.length">
-      <vuedog-beer-list :beers="beers"></vuedog-beer-list>
-      <vuedog-beer-info
-        v-if="selectedBeer"
-        :beer="selectedBeer"
-      ></vuedog-beer-info>
+      <dota2-heroes :heroes="heroes"></dota2-heroes>
+      <dota2-rankings
+        v-if="selectedHero"
+        :heroes="selectedHero"
+      ></dota2-rankings>
     </div>
-    <vuedog-favourites-list :favourites="favourites"></vuedog-favourites-list>
+    <dota2-matches-list :matches="matches"></dota2-matches-list>
   </div>
 </template>
 
 <script>
 import { eventBus } from "@/main.js";
-import Dota2Heroes from "@/components/Dota2Heroes";
-import Dota2Matches from "@/components/Dota2Matches";
-import Dota2Rankings from "@/components/Dota2Rankings";
+import Dota2Heroes from "@/components/dota2Heroes";
+import Dota2Matches from "@/components/dota2Matches";
+import Dota2Rankings from "@/components/dota2Rankings";
 
 export default {
   name: "app",
   components: {
     "dota2-header": Dota2Header,
     "dota2-matches": Dota2Matches,
-    "dota2-list": Dota2Rankings
+    "dota2-rankings": Dota2Rankings,
+    "dota2-heroes":Dota2Heroes
   },
   data() {
     return {
       matches: [],
-      selectedBeer: null
+      selectedHero: null
     };
   },
   computed: {
-    favourites: function() {
-      return this.matches.filter(matches => matches.isFavourite);
+    matches: function() {
+      return this.matches.filter(matches => matches.isMatches);
     }
   },
   methods: {
-    getBeers: function() {
-      fetch("https://api.punkapi.com/v2/beers")
+    getHeroes: function() {
+      fetch("https://api.opendota.com/api")
         .then(res => res.json())
-        .then(beerData => {
-          beerData.forEach(beer => (beer.isFavourite = false));
-          this.beers = beerData;
+        .then(heroData => {
+          heroData.forEach(hero => (hero.isHero = false));
+          this.heroes = heroData;
         })
-        .then(() => this.sortBeers("name"));
+        .then(() => this.sortHeroes("name"));
     },
-    sortBeers: function(property) {
-      this.beers.sort((a, b) => {
+    sortHeroes: function(property) {
+      this.heroes.sort((a, b) => {
         return a[property] < b[property] ? -1 : 1;
       });
     },
-    markFavourite: function(beer) {
-      const index = this.beers.indexOf(beer);
-      this.beers[index].isFavourite = true;
+    markMatch: function(dota2) {
+      const index = this.dota2.indexOf(dota2);
+      this.dota2[index].isMatches = true;
     }
   },
   mounted() {
-    this.getBeers();
+    this.getDota2();
 
-    eventBus.$on("beer-selected", beer => (this.selectedBeer = beer));
+    eventBus.$on("hero-selected", dota2 => (this.selectedDota2 = dota2));
 
-    eventBus.$on("favourite-added", beer => this.markFavourite(beer));
+    eventBus.$on("match-added", dota2 => this.markMatch(dota2));
   }
 };
 </script>
