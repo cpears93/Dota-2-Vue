@@ -11,10 +11,8 @@
 
 <script>
 
-import Dota2MatchListitem from "@/components/Dota2MatchListItem";
-
 export default {
-  name: "dota2-match-list"
+  name: "dota2-match-list",
   props: ["match"],
   componets: {
     "dota2-match-list-item": Dota2MatchListItem

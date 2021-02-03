@@ -11,10 +11,8 @@
 
 <script>
 
-import Dota2RankingsListitem from "@/components/Dota2rankingsListItem";
-
 export default {
-  name: "dota2-rankings-list"
+  name: "dota2-rankings-list",
   props: ["rankings"],
   componets: {
     "dota2-rankings-list-item": Dota2RankingsListItem

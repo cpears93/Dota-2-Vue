@@ -14,9 +14,7 @@
 </template>
 
 <script>
-import { eventBus } from "@/main.js";
 import Dota2Header from "@/components/Dota2Header";
-import Dota2Image from "@/components/Dota2Image";
 
 export default {
   props: ["hero"],
